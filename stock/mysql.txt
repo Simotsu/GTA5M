@@ -1,0 +1,16 @@
+﻿INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (1, 'plane', 'Jet Blue', 100, 20000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (2, 'plane', 'Virgin Air', 100, 10000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (3, 'plane', 'Delta', 100, 5000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (4, 'plane', 'American Air', 100, 1000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (5, 'retail', 'Binco', 100, 20000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (6, 'retail', 'Suburban', 100, 10000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (7, 'retail ', '24/7', 100, 5000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (8, 'retail', 'Ace Liquor', 100, 1000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (9, 'food', 'Piswasser', 100, 20000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (10, 'food', 'Cluck-N-Bell', 100, 10000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (11, 'food', 'Burger Shot', 100, 5000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (12, 'food', 'Hearty Taco', 100, 1000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (13, 'electronics', 'Raspberry Pi', 100, 20000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (14, 'electronics', 'Leroys Electrical', 100, 10000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (15, 'electronics', 'ThriftEX', 100, 5000);
+INSERT INTO `stocks` (`id`, `stock_type`, `name`, `count`, `price_per_stock`) VALUES (16, 'electronics', 'Panoramic', 100, 1000);
