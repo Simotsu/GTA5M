@@ -56,15 +56,15 @@ Citizen.CreateThread(function()
     end
 end)
   
-local gym = {
+local shop1 = {
     {x = 1268.87, y = -1710.14, z = 54.77},
 }
 
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        for k in pairs(gym) do
-            DrawMarker(21, gym[k].x, gym[k].y, gym[k].z, 0, 0, 0, 0, 0, 0, 0.301, 0.301, 0.3001, 0, 153, 255, 255, 0, 0, 0, 0)
+        for k in pairs(shop1) do
+            DrawMarker(21, shop1[k].x, shop1[k].y, shop1[k].z, 0, 0, 0, 0, 0, 0, 0.301, 0.301, 0.3001, 0, 153, 255, 255, 0, 0, 0, 0)
         end
     end
 end)
@@ -76,7 +76,7 @@ Citizen.CreateThread(function()
         for k in pairs(gym) do
 		
             local plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
-            local dist = Vdist(plyCoords.x, plyCoords.y, plyCoords.z, gym[k].x, gym[k].y, gym[k].z)
+            local dist = Vdist(plyCoords.x, plyCoords.y, plyCoords.z, shop1[k].x, shop1[k].y, shop1[k].z)
 
             if dist <= 0.5 then
 				hintToDisplay('Press ~INPUT_CONTEXT~ to open the ~b~Secret Shop~w~')
