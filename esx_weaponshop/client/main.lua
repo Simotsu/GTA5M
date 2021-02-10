@@ -57,42 +57,14 @@ function OpenBuyLicenseMenu(zone)
 				if data3.current.value == 'yes' then
 					--Debit or Cash??
 
-					menu3.close()
-
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash_payment', {
-						title    = 'Select Payment Option',
-						align    = 'top-left',
-						elements = {
-									{label = 'Debit', value = 'debit_card'},
-									{label = 'Cash',  value = 'cash'},
-						}
-					}, function(data4, menu4)
-						if data4.current.value == 'debit_card' then
-							ESX.TriggerServerCallback('esx_weaponshop:buyLicenseBank', function(bought)
-								if bought then
-									ESX.ShowNotification("You have purchased a Tier 1 Weapon License using your Debit Card")
-									menu3.close()
-									Citizen.Wait(160)
-									OpenShopMenu(zone)
-								end
-							end)
-							menu4.close()
-						elseif data4.current.value == 'cash' then
 							ESX.TriggerServerCallback('esx_weaponshop:buyLicense', function(bought)
 								if bought then
-									ESX.ShowNotification("You have purchased a Tier 1 Weapon License")
+									DisplayBoughtScaleform('component','Tier 1 Weapon License', ESX.Math.GroupDigits(Config.LicensePrice))
 									menu3.close()
 									Citizen.Wait(160)
 									OpenShopMenu(zone)
 								end
 							end)
-							menu4.close()
-						end
-						menu4.close()
-					end, function(data4, menu4)
-					menu4.close()
-					end)
-					--end debit or cash
 				end
 			end, function(data3, menu3)
 				menu.close()
@@ -118,44 +90,14 @@ function OpenBuyLicenseMenu(zone)
 						}
 					}, function(data3, menu3)
 						if data3.current.value == 'yes' then
-							--cash or debit
-
-							menu3.close()
-
-							ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash_payment', {
-								title    = 'Select Payment Option',
-								align    = 'top-left',
-								elements = {
-											{label = 'Debit', value = 'debit_card'},
-											{label = 'Cash',  value = 'cash'},
-								}
-							}, function(data4, menu4)
-								if data4.current.value == 'debit_card' then
-									ESX.TriggerServerCallback('esx_weaponshop:buyLicense2Bank', function(bought)
-										if bought then
-											ESX.ShowNotification("You have purchased a Tier 2 Weapon License using your Debit Card")
-											menu3.close()
-											Citizen.Wait(160)
-											OpenShopMenu(zone)
-										end
-									end)
-									menu4.close()
-								elseif data4.current.value == 'cash' then
 									ESX.TriggerServerCallback('esx_weaponshop:buyLicense2', function(bought)
 										if bought then
-											ESX.ShowNotification("You have purchased a Tier 2 Weapon License")
+											DisplayBoughtScaleform('component','Tier 2 Weapon License', ESX.Math.GroupDigits(Config.LicensePrice2))
 											menu3.close()
 											Citizen.Wait(160)
 											OpenShopMenu(zone)
 										end
 									end)
-									menu4.close()
-								end
-								menu4.close()
-							end, function(data4, menu4)
-							menu4.close()
-							end)
-						--endcash or debit
 						end
 					end, function(data3, menu3)
 						menu3.close()
@@ -188,43 +130,14 @@ function OpenBuyLicenseMenu(zone)
 			}, function(data3, menu3)
 				if data3.current.value == 'yes' then
 					--cash or debit
-
-					menu3.close()
-
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash_payment', {
-						title    = 'Select Payment Option',
-						align    = 'top-left',
-						elements = {
-									{label = 'Debit', value = 'debit_card'},
-									{label = 'Cash',  value = 'cash'},
-						}
-					}, function(data4, menu4)
-						if data4.current.value == 'debit_card' then
-							ESX.TriggerServerCallback('esx_weaponshop:buyLicense3Bank', function(bought)
-								if bought then
-									ESX.ShowNotification("You have purchased a Tier 3 Weapon License using your Debit Card")
-									menu3.close()
-									Citizen.Wait(160)
-									OpenShopMenu(zone)
-								end
-							end)
-							menu4.close()
-						elseif data4.current.value == 'cash' then
 							ESX.TriggerServerCallback('esx_weaponshop:buyLicense3', function(bought)
 								if bought then
-									ESX.ShowNotification("You have purchased a Tier 3 Weapon License")
+									DisplayBoughtScaleform('component','Tier 3 Weapon License', ESX.Math.GroupDigits(Config.LicensePrice3))
 									menu3.close()
 									Citizen.Wait(160)
 									OpenShopMenu(zone)
 								end
 							end)
-							menu4.close()
-						end
-						menu4.close()
-					end, function(data4, menu4)
-					menu4.close()
-					end)
-
 					--END
 					--end cash or debit
 				end
@@ -280,7 +193,6 @@ function OpenShopMenu(zone)
 		for k,v in ipairs(Config.Zones[zone].Items0) do
 			local weaponNum, weapon = ESX.GetWeapon(v.weapon)
 			local components, label = {}
-			print(weapon.name)
 			local hasWeapon = HasPedGotWeapon(playerPed, GetHashKey(v.weapon), false)
 
 			if v.components then
@@ -380,6 +292,7 @@ function OpenShopMenu(zone)
 						})
 					end
 				end
+				--[[
 				table.insert(components, {
 					label = _U('buy_ammo')..'<span style="color:green;">'..ESX.Math.GroupDigits(v.ammoPrice)..' $ </span>',
 					type = 'ammo',
@@ -387,12 +300,13 @@ function OpenShopMenu(zone)
 					weapon = weapon.name,
 					ammoNumber = v.AmmoToGive
 				})
+				]]--
 			end
 
 			if hasWeapon and v.components then
 				label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
-			elseif hasWeapon and not v.components and v.ammoPrice ~= nil then
-				label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
+			--elseif hasWeapon and not v.components and v.ammoPrice ~= nil then
+			--	label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
 			elseif hasWeapon and not v.components and v.ammoPrice  == nil then
 				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('gunshop_owned'))
 			elseif v.price > 0 then
@@ -408,8 +322,8 @@ function OpenShopMenu(zone)
 				name = weapon.name,
 				components = components,
 				price = v.price,
-				ammoPrice = v.ammoPrice,
-				ammoNumber = v.AmmoToGive,
+			--	ammoPrice = v.ammoPrice,
+			--	ammoNumber = v.AmmoToGive,
 				hasWeapon = hasWeapon
 			})
 			end
@@ -438,7 +352,7 @@ function OpenShopMenu(zone)
 								label = ('%s: <span style="color:green;">%s</span>'):format(component.label, _U('gunshop_free'))
 							end
 						end
-
+						
 						table.insert(components, {
 							label = label,
 							componentLabel = component.label,
@@ -450,19 +364,20 @@ function OpenShopMenu(zone)
 						})
 					end
 				end
+				--[[
 				table.insert(components, {
 					label = _U('buy_ammo')..'<span style="color:green;">'..ESX.Math.GroupDigits(v.ammoPrice)..' $ </span>',
 					type = 'ammo',
 					price = v.ammoPrice,
 					weapon = weapon.name,
 					ammoNumber = v.AmmoToGive
-				})
+				})]]--
 			end
 
 			if hasWeapon and v.components then
 				label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
-			elseif hasWeapon and not v.components and v.ammoPrice ~= nil then
-				label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
+			--elseif hasWeapon and not v.components and v.ammoPrice ~= nil then
+			--	label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
 			elseif hasWeapon and not v.components and v.ammoPrice  == nil then
 				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('gunshop_owned'))
 			elseif v.price > 0 then
@@ -479,8 +394,8 @@ function OpenShopMenu(zone)
 				name = weapon.name,
 				components = components,
 				price = v.price,
-				ammoPrice = v.ammoPrice,
-				ammoNumber = v.AmmoToGive,
+			--	ammoPrice = v.ammoPrice,
+			--	ammoNumber = v.AmmoToGive,
 				hasWeapon = hasWeapon
 			})
 			end
@@ -520,23 +435,24 @@ function OpenShopMenu(zone)
 						})
 					end
 				end
+				--[[
 				table.insert(components, {
 					label = _U('buy_ammo')..'<span style="color:green;">'..ESX.Math.GroupDigits(v.ammoPrice)..' $ </span>',
 					type = 'ammo',
 					price = v.ammoPrice,
 					weapon = weapon.name,
 					ammoNumber = v.AmmoToGive
-				})
+				})]]
 			end
 			if weapon ~= nil then
 				if hasWeapon and v.components then
 					label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
-				elseif hasWeapon and not v.components and v.ammoPrice ~= nil then
-					label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
+				--elseif hasWeapon and not v.components and v.ammoPrice ~= nil then
+				--	label = ('%s: <span style="color:green;">></span>'):format(weapon.label)
 				elseif hasWeapon and not v.components and v.ammoPrice  == nil then
 					label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('gunshop_owned'))
 				elseif v.price > 0 then
-				label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('gunshop_item', ESX.Math.GroupDigits(v.price)))
+					label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('gunshop_item', ESX.Math.GroupDigits(v.price)))
 				else
 					label = ('%s: <span style="color:green;">%s</span>'):format(weapon.label, _U('gunshop_free'))
 				end
@@ -550,8 +466,8 @@ function OpenShopMenu(zone)
 				name = weapon.name,
 				components = components,
 				price = v.price,
-				ammoPrice = v.ammoPrice,
-				ammoNumber = v.AmmoToGive,
+				--ammoPrice = v.ammoPrice,
+				--ammoNumber = v.AmmoToGive,
 				hasWeapon = hasWeapon
 			})
 			end
@@ -564,6 +480,7 @@ function OpenShopMenu(zone)
 		align = 'top-left',
 		elements = {
 			{ label = _U('weapon_shop'), value = 'weaponShop' },
+			{ label = _U('ammo_shop'), value = 'ammoShop' },
 			{ label = _U('license_shop'), value = 'licenseShop' },
 		}
 	}, function(data, menu)
@@ -587,55 +504,26 @@ function OpenShopMenu(zone)
 							weapon = data2.current.name,
 							ammoToBuy = data2.current.ammoNumber
 						})
-						print(ESX.DumpTable(buyAmmo))
 						OpenAmmoShopMenu(buyAmmo,data2.current.name,menu2,zone)
 					end
 				
 				else
 					--debit or cash?
-					menu2.close()
-
-					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash_payment', {
-						title    = 'Select Payment Option',
-						align    = 'top-left',
-						elements = {
-									{label = 'Debit', value = 'debit_card'},
-									{label = 'Cash',  value = 'cash'},
-						}
-					}, function(data3, menu3)
-						if data3.current.value == 'debit_card' then
-							ESX.TriggerServerCallback('esx_weaponshop:buyWeaponBank', function(bought)
-								if bought then
-									print('true')
-									if data2.current.price > 0 then
-										DisplayBoughtScaleform('weapon',data2.current.name, ESX.Math.GroupDigits(data2.current.price))
-									end
-									PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
-									menu3.close()
-									OpenShopMenu(zone)
-									ShopOpen = false
-								else
-								PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
-								end
-							end, data2.current.name, 1, nil, zone)
-						elseif data3.current.value == 'cash' then
+					
 							ESX.TriggerServerCallback('esx_weaponshop:buyWeapon', function(bought)
 								if bought then
 									if data2.current.price > 0 then
 										DisplayBoughtScaleform('weapon',data2.current.name, ESX.Math.GroupDigits(data2.current.price))
 									end
 									PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
-									menu3.close()
+								
 									OpenShopMenu(zone)
 									ShopOpen = false
 								else
 								PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
 								end
 							end, data2.current.name, 1, nil, zone)
-						end
-					end, function(data3, menu3)
-					menu3.close()
-					end)
+					menu2.close()
 					--end debit or cash
 				end
 	
@@ -646,13 +534,143 @@ function OpenShopMenu(zone)
 			end)
 		elseif data.current.value == "licenseShop" then
 			OpenBuyLicenseMenu(zone)
+		elseif data.current.value == "ammoShop" then
+			ShopOpen = true
+			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'ammoStore', {
+				title    = 'Purchase Ammo',
+				align    = 'top-left',
+				elements = {
+					{label = 'Pistol Ammo', value = 'ammo_pistol', price = 25},
+					{label = 'Shotgun Ammo', value = 'ammo_shotgun', price = 25},
+					{label = 'Sub-Machine Gun Ammo', value = 'ammo_smg', price = 25},
+					{label = 'ArmaLite Rifle Ammo', value = 'ammo_rifle', price = 45},
+					{label = 'Suppressor Attachment', value = 'suppressor', price = 700},
+					{label = 'Grip Attachment', value = 'grip', price = 175},
+					{label = 'Flashlight Attachment', value = 'flashlight', price = 80},
+				}
+				}, function(data2, menu2)
+				if data2.current.value == 'suppressor' then
+					--debit or cash?? AMMO PISTOL
+						--menu2.close()
+						ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component',data2.current.value, ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+						
+						--	TriggerServerEvent('esx_weaponshop:buyAmmo', data2.current.value, data2.current.price)
+
+				elseif data2.current.value == 'grip' then
+					--debit or cash?? AMMO PISTOL
+						--menu2.close()
+			
+						ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component',data2.current.value, ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+				elseif data2.current.value == 'flashlight' then
+					--debit or cash?? AMMO PISTOL
+						--menu2.close()
+						ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component',data2.current.value, ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+					elseif data2.current.value == 'ammo_pistol' then
+					--debit or cash?? AMMO PISTOL
+						--menu2.close()
+						ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component','Box of Pistol Ammo', ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+
+					elseif data2.current.value == 'ammo_shotgun' then
+					ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component','Box of Shotgun Ammo', ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+					elseif data2.current.value == 'ammo_smg' then
+						ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component','Box of Sub-Machine Gun Ammo', ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+					elseif data2.current.value == 'ammo_rifle' then
+						ESX.TriggerServerCallback('esx_weaponshop:buyAmmo1', function(bought)
+							if bought then
+								if data2.current.price > 0 then
+									DisplayBoughtScaleform('component','Box of Assault Rifle Ammo', ESX.Math.GroupDigits(data2.current.price))
+								end
+								PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							
+								OpenShopMenu(zone)
+								ShopOpen = false
+							else
+							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
+							end
+						end, data2.current.value, data2.current.price)
+					end
+				end, function(data2, menu2)
+						menu2.close()
+				end)
 		end
 	end, function(data, menu)
 	menu.close()
 	end)
 end--?--------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
+------------------------------------------------------------------------------------------------------ILLEGAL---------------------------------------------------------------------------
 
 --illegal weapons menu
 function OpenShopMenuIllegal(zone)
@@ -737,13 +755,10 @@ function OpenShopMenuIllegal(zone)
 		align = 'top-left',
 		elements = elements
 	}, function(data, menu)
-		print('fired2')
-		print(data.current.hasWeapon)
-		print(data.current.name)
 		if data.current.hasWeapon then
-			print('fired1')
+
 			if #data.current.components > 0 then
-				OpenWeaponComponentShopMenu(data.current.components, data.current.name, menu, zone)
+				OpenWeaponComponentShopMenuILLEGAL(data.current.components, data.current.name, menu, zone)
 			elseif data.current.ammoPrice ~= nil then
 
 				table.insert(buyAmmo, {
@@ -752,8 +767,7 @@ function OpenShopMenuIllegal(zone)
 					weapon = data.current.name,
 					ammoToBuy = data.current.ammoNumber
 				})
-				print(ESX.DumpTable(buyAmmo))
-				OpenAmmoShopMenu(buyAmmo,data.current.name,menu,zone)
+				OpenAmmoShopMenuILLEGAL(buyAmmo,data.current.name,menu,zone)
 			end
 		else
 			ESX.TriggerServerCallback('esx_weaponshop:buyWeapon', function(bought)
@@ -763,7 +777,7 @@ function OpenShopMenuIllegal(zone)
 					end
 					PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
 					menu.close()
-					OpenShopMenu(zone)
+					OpenShopMenuIllegal(zone)
 					ShopOpen = false
 				else
 					PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
@@ -774,8 +788,7 @@ function OpenShopMenuIllegal(zone)
 	end)
 end
 
-
-function OpenWeaponComponentShopMenu(components, weaponName, parentShop,zone)
+function OpenWeaponComponentShopMenuILLEGAL(components, weaponName, parentShop,zone)
 	ShopOpen = true
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gunshop_buy_weapons_components', {
 		title    = _U('gunshop_componenttitle'),
@@ -786,36 +799,7 @@ function OpenWeaponComponentShopMenu(components, weaponName, parentShop,zone)
 		if data.current.hasComponent and data.current.type ~= 'ammo'then
 			ESX.ShowNotification(_U('gunshop_hascomponent'))
 		elseif data.current.type ~= 'ammo' then
-			--debit or cash??
-			menu.close()
-			
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash', {
-				title    = 'Select Payment Option',
-				align    = 'top-left',
-				elements = {
-							{label = 'Debit', value = 'debit_card'},
-							{label = 'Cash',  value = 'cash'},
-				}
-			}, function(data3, menu3)
-				if data3.current.value == 'debit_card' then
-					menu3.close()
-					ESX.TriggerServerCallback('esx_weaponshop:buyWeaponBank', function(bought)
-						if bought then
-							if data.current.price > 0 then
-								DisplayBoughtScaleform('component',data.current.componentLabel, ESX.Math.GroupDigits(data.current.price))
-							end
-							ShopOpen = false
-							menu.close()
-							parentShop.close()
-							PlaySoundFrontend(-1, 'NAV', 'HUD_AMMO_SHOP_SOUNDSET', false)
-							OpenShopMenu(zone)
-						else
-							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
-						end
-						menu3.close()
-					end, weaponName, 2, data.current.componentNum, zone)
-				elseif data3.current.value == 'cash' then
-					menu3.close()
+					
 					ESX.TriggerServerCallback('esx_weaponshop:buyWeapon', function(bought)
 						if bought then
 							if data.current.price > 0 then
@@ -831,45 +815,11 @@ function OpenWeaponComponentShopMenu(components, weaponName, parentShop,zone)
 						end
 						menu3.close()
 					end, weaponName, 2, data.current.componentNum, zone)
-				end
-				menu3.close()
-			end, function(data3, menu3)
-			menu3.close()
-			end)
 
-			--end debit or cash
 		elseif data.current.type == 'ammo' then
-			--debit or cash??
 
 			menu.close()
 			local ReachedMax = ReachedMaxAmmo(weaponName)
-			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash', {
-				title    = 'Select Payment Option',
-				align    = 'top-left',
-				elements = {
-							{label = 'Debit', value = 'debit_card'},
-							{label = 'Cash',  value = 'cash'},
-				}
-			}, function(data3, menu3)
-				if data3.current.value == 'debit_card' then
-					menu3.close()
-					ESX.TriggerServerCallback('esx_weaponshop:buyWeaponBank', function(bought)
-						if bought then
-							if data.current.price > 0 then
-								ESX.ShowNotification(_U('gunshop_bought',_U('ammo'),ESX.Math.GroupDigits(data.current.price)))
-								AddAmmoToPed(PlayerPedId(), weaponName, data.current.ammoNumber)
-							end
-							parentShop.close()
-						else
-							if ReachedMax then
-								ESX.ShowNotification(_U('gunshop_maxammo'))
-							end
-							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
-						end
-					end, weaponName, 3, nil, zone, ReachedMax)
-					menu3.close()
-				elseif data3.current.value == 'cash' then
-					menu3.close()
 					ESX.TriggerServerCallback('esx_weaponshop:buyWeapon', function(bought)
 						if bought then
 							if data.current.price > 0 then
@@ -884,13 +834,6 @@ function OpenWeaponComponentShopMenu(components, weaponName, parentShop,zone)
 							PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
 						end
 					end, weaponName, 3, nil, zone, ReachedMax)
-					menu3.close()
-				end
-				menu3.close()
-			end, function(data3, menu3)
-			menu3.close()
-			end)
-			--end debit or cash
 		end
 
 	end, function(data, menu)
@@ -900,7 +843,7 @@ function OpenWeaponComponentShopMenu(components, weaponName, parentShop,zone)
 	end)
 end
 
-function OpenAmmoShopMenu(buyAmmo,weaponName, parentShop,zone)
+function OpenAmmoShopMenuILLEGAL(buyAmmo,weaponName, parentShop,zone)
 	ShopOpen = true
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gunshop_buy_weapons_components', {
 		title    = _U('gunshop_componenttitle'),
@@ -908,40 +851,8 @@ function OpenAmmoShopMenu(buyAmmo,weaponName, parentShop,zone)
 		elements = buyAmmo
 	}, function(data4, menu4)
 		local ReachedMax = ReachedMaxAmmo(weaponName)
-		--debit or cash??
-
 		menu4.close()
 		local ReachedMax = ReachedMaxAmmo(weaponName)
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'debit_cash', {
-			title    = 'Select Payment Option',
-			align    = 'top-left',
-			elements = {
-						{label = 'Debit', value = 'debit_card'},
-						{label = 'Cash',  value = 'cash'},
-			}
-		}, function(data5, menu5)
-			menu5.close()
-
-			if data5.current.value == 'debit_card' then
-				menu5.close()
-				ESX.TriggerServerCallback('esx_weaponshop:buyWeaponBank', function(bought)
-					if bought then
-						if data4.current.price > 0 then
-							ESX.ShowNotification(_U('gunshop_bought',_U('ammo'),ESX.Math.GroupDigits(data4.current.price)))
-							AddAmmoToPed(PlayerPedId(), weaponName, data4.current.ammoToBuy)
-						end
-						parentShop.close()
-					else
-						if ReachedMax then
-							ESX.ShowNotification(_U('gunshop_maxammo'))
-						end
-						PlaySoundFrontend(-1, 'ERROR', 'HUD_AMMO_SHOP_SOUNDSET', false)
-					end
-					menu4.close()
-				end, weaponName, 3, nil, zone, ReachedMax)
-				menu5.close()
-			elseif data5.current.value == 'cash' then
-				menu5.close()
 				ESX.TriggerServerCallback('esx_weaponshop:buyWeapon', function(bought)
 					if bought then
 						if data4.current.price > 0 then
@@ -957,20 +868,13 @@ function OpenAmmoShopMenu(buyAmmo,weaponName, parentShop,zone)
 					end
 					menu4.close()
 				end, weaponName, 3, nil, zone, ReachedMax)
-			end
-			menu5.close()
-		end, function(data5, menu5)
-		menu5.close()
-		end)
-
-		--END
-		
---	end debit or cash
 	end, function(data4, menu4)
 		menu4.close()
 	end)
 end
 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function DisplayBoughtScaleform(type, item, price)
 	local scaleform = ESX.Scaleform.Utils.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
 	local sec = 4
@@ -1059,7 +963,7 @@ Citizen.CreateThread(function()
 end)
 
 -- Create Blips Illegal Weapons
---[[
+
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.Zones1) do
 		if not v.Legal then
@@ -1079,7 +983,7 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-]]
+
 
 -- Display markers
 Citizen.CreateThread(function()

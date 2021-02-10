@@ -94,6 +94,94 @@ ESX.RegisterServerCallback('esx_weaponshop:buyLicense3Bank', function(source, cb
 	end
 end)
 
+ESX.RegisterServerCallback('esx_weaponshop:buyAmmo1', function(source, cb, itemName, price1)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local sourceItem = xPlayer.getInventoryItem(itemName)
+
+	-- get price
+	local price = 0
+	local itemLabel = ''
+
+	price = price1
+
+	-- can the player afford this item?
+	if xPlayer.getMoney() >= price then
+		-- can the player carry the said amount of x item?
+		if sourceItem.limit ~= -1 and (sourceItem.count + 1) > sourceItem.limit then
+			TriggerClientEvent('esx:showNotification', _source, 'You cannot carry anymore of these.')
+		else
+		print(price)
+			xPlayer.removeMoney(price)
+			xPlayer.addInventoryItem(itemName, 1)
+			TriggerClientEvent('esx:showNotification', _source, _U('bought', 1, itemLabel, ESX.Math.GroupDigits(price)))
+			cb(true)
+		end
+	else
+		local missingMoney = price - xPlayer.getMoney()
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough1', ESX.Math.GroupDigits(missingMoney)))
+		cb(false)
+	end
+	-----------
+end)
+
+RegisterServerEvent('esx_weaponshop:buyAmmo')
+AddEventHandler('esx_weaponshop:buyAmmo', function(itemName, price1)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local sourceItem = xPlayer.getInventoryItem(itemName)
+
+	-- get price
+	local price = 0
+	local itemLabel = ''
+
+	price = price1
+
+	-- can the player afford this item?
+	if xPlayer.getMoney() >= price then
+		-- can the player carry the said amount of x item?
+		if sourceItem.limit ~= -1 and (sourceItem.count + 1) > sourceItem.limit then
+			TriggerClientEvent('esx:showNotification', _source, 'You cannot carry anymore of these clips.')
+		else
+		print(price)
+			xPlayer.removeMoney(price)
+			xPlayer.addInventoryItem(itemName, 1)
+			TriggerClientEvent('esx:showNotification', _source, _U('bought', 1, itemLabel, ESX.Math.GroupDigits(price)))
+		end
+	else
+		local missingMoney = price - xPlayer.getMoney()
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough1', ESX.Math.GroupDigits(missingMoney)))
+	end
+end)
+
+RegisterServerEvent('esx_weaponshop:buyAmmoBank')
+AddEventHandler('esx_weaponshop:buyAmmoBank', function(itemName, price1)
+	local _source = source
+	local xPlayer = ESX.GetPlayerFromId(_source)
+	local sourceItem = xPlayer.getInventoryItem(itemName)
+
+	-- get price
+	local price = 0
+	local itemLabel = ''
+
+	price = price1
+
+	-- can the player afford this item?
+	if xPlayer.getAccount('bank').money >= price then
+		-- can the player carry the said amount of x item?
+		if sourceItem.limit ~= -1 and (sourceItem.count + 1) > sourceItem.limit then
+			TriggerClientEvent('esx:showNotification', _source, 'You cannot carry anymore of these clips.')
+		else
+		print(price)
+			xPlayer.removeAccountMoney('bank',price)
+			xPlayer.addInventoryItem(itemName, 1)
+			TriggerClientEvent('esx:showNotification', _source, _U('bought', 1, itemLabel, ESX.Math.GroupDigits(price)))
+		end
+	else
+		local missingMoney = price - xPlayer.getMoney()
+		TriggerClientEvent('esx:showNotification', _source, _U('not_enough1', ESX.Math.GroupDigits(missingMoney)))
+	end
+end)
 
 
 
@@ -201,30 +289,31 @@ ESX.RegisterServerCallback('esx_weaponshop:buyWeapon', function(source, cb, weap
 			end
 
 		-- Weapon Component
-	elseif type == 2 then
-		local price = selectedWeapon.components[componentNum]
-		local weaponNum, weapon = ESX.GetWeapon(weaponName)
+		elseif type == 2 then
+			local price = selectedWeapon.components[componentNum]
+			local weaponNum, weapon = ESX.GetWeapon(weaponName)
 
-		local component = weapon.components[componentNum]
+			local component = weapon.components[componentNum]
 
-		if component then
-			if xPlayer.getMoney() >= price then
-				xPlayer.removeMoney(price)
-				xPlayer.addWeaponComponent(weaponName, component.name)
+			if component then
+				if xPlayer.getAccount('black_money').money >= price then
+					xPlayer.removeAccountMoney('black_money', price)
+					xPlayer.addWeaponComponent(weaponName, component.name)
 
-				cb(true)
+					cb(true)
+				else
+					cb(false)
+				end
 			else
+				print(('esx_weaponshop: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
 				cb(false)
 			end
-		else
-			print(('esx_weaponshop: %s attempted to buy an invalid weapon component.'):format(xPlayer.identifier))
-			cb(false)
-		end
 
 			--Weapon Ammo
 		elseif type == 3 then
-			if xPlayer.getMoney() >= selectedWeapon.ammoPrice and not max then
-				xPlayer.removeMoney(selectedWeapon.ammoPrice)
+		print('Trying to buy ammo')
+			if xPlayer.getAccount('black_money').money >= selectedWeapon.ammoPrice and not max then
+				xPlayer.removeAccountMoney('black_money', selectedWeapon.ammoPrice)
 				cb(true)
 			else
 				cb(false)

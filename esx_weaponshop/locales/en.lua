@@ -1,6 +1,7 @@
 Locales ['en'] = {
   ['license_shop'] = 'Buy A License',
   ['weapon_shop'] = 'Buy A Weapon',
+  ['ammo_shop'] = 'Buy Ammo',
   ['buy_license'] = 'buy weapon license?',
   ['yes'] = '%s',
   ['no'] = 'no',
@@ -25,4 +26,7 @@ Locales ['en'] = {
   ['gunshop_hascomponent'] = 'you have that attatchment equiped!',
   ['ammo'] = 'ammo',
   ['gunshop_maxammo'] = 'you have reached maximum ammo you can hold',
+  ['bought'] = 'you just bought ~y~%sx~s~ ~b~%s~s~ for ~r~$%s~s~',
+  
+  ['not_enough1'] = 'you do not have ~r~enough~s~ money, you\'re ~y~missing~s~ ~r~$%s~s~!',
 }
